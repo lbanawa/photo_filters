@@ -1,6 +1,6 @@
 import unittest
 import os
-from process import *
+from src.process import *
 
 
 class TestReadFiles(unittest.TestCase):
