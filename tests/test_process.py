@@ -1,6 +1,8 @@
 import unittest
 import os
 from process import *
+import pandas as pd
+import shutil
 
 
 class TestReadFiles(unittest.TestCase):
@@ -30,9 +32,30 @@ class TestReadFiles(unittest.TestCase):
             self.assertEqual(read_files(test), expected_output)
 
 
-    # Test if input path is path to a non-image file
-    # def test_not_image(self):
+    # Test if input files in valid path are not images
+    def test__read_files__not_image(self):
+        expected_output = (False, 'Ayye! Yaar File Tis No Be An Image, Maytee!')
+    
+        #make temporary folder for non-image test files
+        if not os.path.exists('tmp'):
+            os.makedirs('tmp')
+    
+        #create .txt file and save to created folder
+        text_file = open("tmp/phototest.txt","w+")
+        for i in range(5): 
+            text_file.write("This is line %d\r\n" % (i+1))
+        text_file.close()
+        
+        #create .csv file and save to created folder
+        pd.DataFrame([1,2,3]).to_csv('tmp/testfile.csv')
+        
+        output = read_files('tmp')
+        shutil.rmtree('tmp')
+        
+        self.assertEqual(output, expected_output)
+    
 
 
 if __name__ == '__main__':
     unittest.main()
+

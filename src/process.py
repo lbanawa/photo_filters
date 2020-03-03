@@ -12,16 +12,22 @@ def read_files(folder_path):
         arrays{list} -- list of images converted to numpy arrays
         files{list} -- list of file paths as strings
     """
+    file_types = ["jpg", "jpeg", "png"]
+
     if type(folder_path) != str:
         return False, "Input folder must be a string."
-    else:
-        files = glob(folder_path + "/*")
 
-        if len(files) == 0:
-            return False, "Input a valid folder path"
-        else:
-            arrays = [cv2.imread(file) for file in files]
-            return True, [arrays, files]
+    files = glob(folder_path + "/*")
+
+    if len(files) == 0:
+        return False, "Input a valid folder path"
+
+    for file in files:
+        if file.split('.')[-1] not in file_types:
+            return False, "Ayye! Yaar File Tis No Be An Image, Maytee!"
+
+    arrays = [cv2.imread(file) for file in files]
+    return True, [arrays, files]
 
 
 def save_files(filtered_photos_to_save, file_names, output_folder):
