@@ -55,39 +55,20 @@ class TestReadFiles(unittest.TestCase):
         
         self.assertEqual(output, expected_output)
 
-    # Test success case
+    # Test success case -- for multiple and single file inputs
     def test_for_success_case(self):
-    
         if not os.path.exists('tmp'):
             os.makedirs('tmp')
-        
         #create image file and save to created folder
         img = Image.new('RGB', (60, 30), color = 'red')
         img.save('tmp/pil_red.png')
         img.save('tmp/pil_red.jpg')
         img.save('tmp/pil_red.jpeg')
-        
-        status, output = read_files('tmp')
-        
+        status_multiple_files, output = read_files('tmp')
+        status_single_file, output = read_files('tmp/pil_red.jpg')        
         shutil.rmtree('tmp')
-        
-        self.assertTrue(status)
-
-    # Test for single file input
-    def single_file_test(self):
-        #create image file and save to desktop without folder
-        img = Image.new('RGB', (60, 30), color = 'red')
-        desktop = os.path.join(os.path.expanduser("~"), "Desktop")
-        filepath = os.path.join(desktop, "pil_red.png")
-        img.save(filepath)
-        
-        #pass new file path through read_files() and see if it works
-        status, output = read_files(filepath)
-        
-        #delete file from desktop when finished
-        os.remove(filepath)
-        
-        self.assertTrue(status)
+        self.assertTrue(status_multiple_files)  # Test directory input
+        self.assertTrue(status_single_file)     # Test full file path input
     
 
 
