@@ -72,6 +72,22 @@ class TestReadFiles(unittest.TestCase):
         shutil.rmtree('tmp')
         
         self.assertTrue(status)
+
+    # Test for single file input
+    def single_file_test(self):
+        #create image file and save to desktop without folder
+        img = Image.new('RGB', (60, 30), color = 'red')
+        desktop = os.path.join(os.path.expanduser("~"), "Desktop")
+        filepath = os.path.join(desktop, "pil_red.png")
+        img.save(filepath)
+        
+        #pass new file path through read_files() and see if it works
+        status, output = read_files(filepath)
+        
+        #delete file from desktop when finished
+        os.remove(filepath)
+        
+        self.assertTrue(status)
     
 
 

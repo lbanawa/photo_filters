@@ -17,7 +17,12 @@ def read_files(folder_path):
     if type(folder_path) != str:
         return False, "Input folder must be a string."
 
-    files = glob(folder_path + "/*")
+     #determine if path is a folder or single image file
+    if folder_path.split('.')[-1] not in file_types:
+        files = glob(folder_path + "/*")
+        
+    if folder_path.split('.')[-1] in file_types:
+        files = glob(folder_path)
 
     if len(files) == 0:
         return False, "Input a valid folder path"
