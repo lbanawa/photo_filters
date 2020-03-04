@@ -3,6 +3,7 @@ import os
 from process import *
 import pandas as pd
 import shutil
+from PIL import Image
 
 
 class TestReadFiles(unittest.TestCase):
@@ -53,6 +54,24 @@ class TestReadFiles(unittest.TestCase):
         shutil.rmtree('tmp')
         
         self.assertEqual(output, expected_output)
+
+    # Test success case
+    def test_for_success_case(self):
+    
+        if not os.path.exists('tmp'):
+            os.makedirs('tmp')
+        
+        #create image file and save to created folder
+        img = Image.new('RGB', (60, 30), color = 'red')
+        img.save('tmp/pil_red.png')
+        img.save('tmp/pil_red.jpg')
+        img.save('tmp/pil_red.jpeg')
+        
+        status, output = read_files('tmp')
+        
+        shutil.rmtree('tmp')
+        
+        self.assertTrue(status)
     
 
 
