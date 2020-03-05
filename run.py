@@ -1,23 +1,31 @@
+import os, sys, inspect, getopt
+
+my_location = os.path.dirname(os.path.abspath(inspect.stack()[0][1]))
+python_sources_root = os.path.join(my_location, 'src')
+sys.path.append(python_sources_root)
+
 from process import *
-import sys, getopt
+
 
 def print_help():
     print("usage:")
     print("  run.py -i <input> -o <output> -f <filter>")
-    print("     Input:    image or directory path (default: ./input/)")
-    print("     Output:   output directory path (default: ./output/)")
+    print("     Input:    image or directory path (default: ./input)")
+    print("     Output:   output directory path (default: ./output)")
     print("     Filter:   filter applied to image (gray, sepia)")
     print("                      (default gray)")
 
 def main(argv):
+
+
     # default config
     INPUT  = 'input'
-    OUTPUT = 'output'
+    OUTPUT = 'output/'
     FILTER = 'gray'
 
     # make default output dir if it doesn't exist
     if not os.path.exists('output'):
-            os.makedirs('output')
+        os.makedirs('output')
 
     try:
         opts, args = getopt.getopt(argv, "hi:o:f:", ["input=","output=","filter="])
@@ -26,9 +34,9 @@ def main(argv):
         sys.exit(2)
 
     for opt, arg in opts:
-        exit = False
         if opt == '-h':
-            exit = True
+            rint_help()
+            sys.exit(2)
 
         elif opt in ("-i", "--input"):
             INPUT = arg
@@ -40,13 +48,7 @@ def main(argv):
         elif opt in ("-f", "--filter"):
             FILTER = arg
 
-    if exit:
-        print_help()
-        sys.exit(2)
-
-
     run_filter(INPUT, OUTPUT, FILTER)
-
 
 if __name__ == "__main__":
     main(sys.argv[1:])

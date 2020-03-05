@@ -4,3 +4,9 @@
 *.pyc
 *.pyc
 *.sublime-workspace
+*.coverage
+
+
+# file testing:
+*input*
+*output*
