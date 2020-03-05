@@ -55,8 +55,8 @@ def save_files(filtered_photos_to_save, file_names, output_folder, filter_type):
             return False, "Filtered photos are not arrays."
         # .format function turns input into a str and puts that str into position where the brackets are
         output_path = output_folder + f_name.split('/')[-1].replace('.','_{}.'.format(filter_type))
-        cv2.imwrite(output_path, photo) 
-    
+        cv2.imwrite(output_path, photo)
+
     return True, "Filtered files saved successfully!"
 
 
