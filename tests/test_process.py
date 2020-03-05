@@ -4,6 +4,7 @@ from process import *
 import pandas as pd
 import shutil
 from PIL import Image
+from glob import glob
 
 
 class TestReadFiles(unittest.TestCase):
@@ -71,6 +72,7 @@ class TestReadFiles(unittest.TestCase):
         self.assertTrue(status_single_file)     # Test full file path input
     
 
+    # Test if filtered_photos_to_save is a list of arrays
     def test__invalid__filtered_photos_to_save(self):
         expected_output = (False, 'Filtered photos are in invalid format.')
         if not os.path.exists('tmp'):
@@ -85,6 +87,28 @@ class TestReadFiles(unittest.TestCase):
         shutil.rmtree('tmp')
         
         self.assertTrue(save_files(test_cases, file_names, 'tmp'), expected_output)
+
+    # Test if filtered_photos_to_save and file_names are same length
+    def test_inputs_different_length(self):
+        expected_output = (False, 'An unexpected error occured, image data does not match.')
+
+        if not os.path.exists('tmp'):
+            os.makedirs('tmp')
+
+        img = Image.new('RGB', (60, 30), color = 'red')
+        img.save('tmp/pil_red.png')
+        img.save('tmp/pil_red.jpg')
+
+        files = glob('tmp' + "/*")
+        arrays = [cv2.imread(file) for file in files]    
+
+        file_names = ['tmp/pil_red.png']
+        filter_type = 'test'
+        status, message = save_files(arrays, file_names, 'tmp')
+        shutil.rmtree('tmp')
+
+        self.assertTrue(save_files(arrays, file_names, 'tmp'), expected_output)
+
 
 
 if __name__ == '__main__':

@@ -45,8 +45,13 @@ def save_files(filtered_photos_to_save, file_names, output_folder):
         None -- modified images saved in designated output folder
     """
     for photo,f_name in zip(filtered_photos_to_save, file_names):
-        if str(photo).split('(')[0] != '[[array':
+        array_label = ['[[array','[array', 'array']
+        if str(filtered_photos_to_save).split('(')[0] not in array_label:
             return False, "Filtered photos are in invalid format."
+        
+        if len(filtered_photos_to_save) != len(file_names):
+            return False, 'An unexpected error occured, image data does not match.'
+
         else:
             for photo,f_name in zip(filtered_photos_to_save, file_names):
                 # .format function turns input into a str and puts that str into position where the brackets are
