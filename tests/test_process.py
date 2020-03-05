@@ -71,6 +71,21 @@ class TestReadFiles(unittest.TestCase):
         self.assertTrue(status_single_file)     # Test full file path input
     
 
+    def test__invalid__filtered_photos_to_save(self):
+        expected_output = (False, 'Filtered photos are in invalid format.')
+        if not os.path.exists('tmp'):
+            os.makedirs('tmp')
+        test_cases = [1, #integer/ not a list
+                     [], #empty list
+                     ["dog", "cat", "bird"] #list of non-arrays
+                     ]
+        file_names = ['tmp/integer.txt,', 'tmp/empty_list.txt', 'non_array_list.txt']
+        filter_type = 'test'
+        status, message = save_files(test_cases, file_names, 'tmp')
+        shutil.rmtree('tmp')
+        
+        self.assertTrue(save_files(test_cases, file_names, 'tmp'), expected_output)
+
 
 if __name__ == '__main__':
     unittest.main()

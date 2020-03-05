@@ -45,9 +45,14 @@ def save_files(filtered_photos_to_save, file_names, output_folder):
         None -- modified images saved in designated output folder
     """
     for photo,f_name in zip(filtered_photos_to_save, file_names):
-        # .format function turns input into a str and puts that str into position where the brackets are
-        output_path = output_folder + f_name.split('/')[-1].replace('.','_{}.'.format(filter_type))
-        cv2.imwrite(output_path, photo)
+        if str(photo).split('(')[0] != '[[array':
+            return False, "Filtered photos are in invalid format."
+        else:
+            for photo,f_name in zip(filtered_photos_to_save, file_names):
+                # .format function turns input into a str and puts that str into position where the brackets are
+                output_path = output_folder + f_name.split('/')[-1].replace('.','_{}.'.format(filter_type))
+                cv2.imwrite(output_path, photo) 
+            return True, "Filtered files saved successfully!"
 
 
 def run_filter(input_folder, output_folder, filter_type):
