@@ -1,3 +1,4 @@
+import logging
 from filters import *
 from glob import glob
 import cv2
@@ -34,20 +35,29 @@ def read_files(folder_path):
     return True, [arrays, files]
 
 
-def save_files(filtered_photos_to_save, file_names, output_folder):
+def save_files(filtered_photos_to_save, file_names, output_folder, filter_type):
     """
     Convert modified numpy arrays into images and save as original file name plus filter_type to a specified output folder.
     Arguments:
         filtered_photos_to_save{list} -- list of modified numpy arrays
         file_names{list} -- list of strings -- image file paths showing original image name
         output_folder{str} -- path to the folder to save the output images
+        filter_type{str} -- type of filter we're going to run
     Returns:
         None -- modified images saved in designated output folder
     """
+    if len(filtered_photos_to_save) != len(file_names):
+            return False, 'An unexpected error occured, image data does not match.'
+
+
     for photo,f_name in zip(filtered_photos_to_save, file_names):
+        if type(photo) != np.ndarray:
+            return False, "Filtered photos are not arrays."
         # .format function turns input into a str and puts that str into position where the brackets are
         output_path = output_folder + f_name.split('/')[-1].replace('.','_{}.'.format(filter_type))
-        cv2.imwrite(output_path, photo)
+        cv2.imwrite(output_path, photo) 
+    
+    return True, "Filtered files saved successfully!"
 
 
 def run_filter(input_folder, output_folder, filter_type):
@@ -67,8 +77,8 @@ def run_filter(input_folder, output_folder, filter_type):
     if read_status:  # if we didn't hit any errors (read_files returned: True, [array,files])
         filters_input, file_names = read_output #then assign [array, files] to variables
     else: # we hit one of our errors (read_files returned: False, "some message")
-        print(read_output) # print our returned message
-        return None # don't run any more code from below
+        logging.error(read_output) # log our returned message as an error
+        return # don't run any more code from below
 
     # run correct filter type
     if filter_type == "gray":
@@ -77,4 +87,9 @@ def run_filter(input_folder, output_folder, filter_type):
         filtered_photos_to_save = sepia_filter(filters_input)
 
 
-    save_files(filtered_photos_to_save, file_names, output_folder)
+    save_status, message = save_files(filtered_photos_to_save, file_names, output_folder, filter_type)
+
+    if save_status:
+        logging.info(message)
+    else:
+        logging.error(message)
