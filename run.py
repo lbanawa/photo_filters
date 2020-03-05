@@ -35,7 +35,7 @@ def main(argv):
 
     for opt, arg in opts:
         if opt == '-h':
-            rint_help()
+            print_help()
             sys.exit(2)
 
         elif opt in ("-i", "--input"):

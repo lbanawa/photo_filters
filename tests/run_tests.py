@@ -14,7 +14,7 @@ def test_runner_suite():
     tests_sources_root = my_location #os.path.join(my_location,'tests')
 
     # region Needed to run when using coverage.py so the imports are properly resolved
-    python_sources_root = os.path.join(os.path.join(my_location,'..'), 'src')
+    python_sources_root = os.path.join(my_location,'..', 'src')
     sys.path.append(python_sources_root)
     # endregion
 
