@@ -35,7 +35,7 @@ class TestReadFiles(unittest.TestCase):
 
 
     # Test if input files in valid path are not images
-    def test__read_files__not_image(self):
+    def test_not_image(self):
         expected_output = (False, 'Ayye! Yaar File Tis No Be An Image, Maytee!')
     
         #make temporary folder for non-image test files
@@ -72,23 +72,24 @@ class TestReadFiles(unittest.TestCase):
         self.assertTrue(status_single_file)     # Test full file path input
     
 
-    # Test if filtered_photos_to_save is a list of arrays
+class TestSaveFiles(unittest.TestCase):
+
+    # Test if filtered_photos_to_save is not a list of arrays
     def test__invalid__filtered_photos_to_save(self):
         expected_output = (False, 'Filtered photos are in invalid format.')
         if not os.path.exists('tmp'):
             os.makedirs('tmp')
-        test_cases = [1, #integer/ not a list
-                     [], #empty list
-                     ["dog", "cat", "bird"] #list of non-arrays
+        test_cases = [1,                    # integer/ not a list
+                     [],                    # empty list
+                     ["dog", "cat", "bird"] # list of non-arrays
                      ]
         file_names = ['tmp/integer.txt,', 'tmp/empty_list.txt', 'non_array_list.txt']
-        filter_type = 'test'
-        status, message = save_files(test_cases, file_names, 'tmp')
+        output = save_files(test_cases, file_names, 'tmp', 'test')
         shutil.rmtree('tmp')
         
-        self.assertTrue(save_files(test_cases, file_names, 'tmp'), expected_output)
+        self.assertTrue(output, expected_output)
 
-    # Test if filtered_photos_to_save and file_names are same length
+    # Test if filtered_photos_to_save and file_names are not same length
     def test_inputs_different_length(self):
         expected_output = (False, 'An unexpected error occured, image data does not match.')
 
@@ -103,12 +104,40 @@ class TestReadFiles(unittest.TestCase):
         arrays = [cv2.imread(file) for file in files]    
 
         file_names = ['tmp/pil_red.png']
-        filter_type = 'test'
-        status, message = save_files(arrays, file_names, 'tmp')
+        output = save_files(arrays, file_names, 'tmp', 'test')
         shutil.rmtree('tmp')
 
-        self.assertTrue(save_files(arrays, file_names, 'tmp'), expected_output)
+        self.assertTrue(output, expected_output)
 
+
+class TestRunFilter(unittest.TestCase):
+
+    def test_success(self):
+
+        expected_output = ['tmp_out/pil_red.png',
+                           'tmp_out/pil_red_sepia.png',
+                           'tmp_out/pil_red_gray.png']
+
+        folders = ["tmp_in", "tmp_out"]
+        for f in folders:
+            if not os.path.exists(f):
+                os.makedirs(f)
+
+        #create image file and save to created folder
+        img = Image.new('RGB', (60, 30), color = 'red')
+        img.save('tmp_in/pil_red.png')
+        
+        
+        filter_types = ['gray', 'sepia']
+        for f in filter_types:
+            run_filter('tmp_in/', 'tmp_out/', f)
+        
+        out_files = glob('tmp_out/*')
+
+        for f in folders:
+            shutil.rmtree(f)
+        
+        self.assertTrue(out_files, expected_output)
 
 
 if __name__ == '__main__':
