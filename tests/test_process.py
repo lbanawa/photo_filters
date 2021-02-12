@@ -1,6 +1,6 @@
 import unittest
 import os
-from process import *
+from src.process import *
 import pandas as pd
 import shutil
 from PIL import Image

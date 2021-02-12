@@ -1,5 +1,5 @@
 import logging
-from filters import *
+from src.filters import *
 from glob import glob
 import cv2
 
